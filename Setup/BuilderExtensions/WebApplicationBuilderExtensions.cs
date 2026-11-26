@@ -1,13 +1,14 @@
-﻿using TelemetryHealthPredictor.Algorithm;
+﻿using AlgoLib.Algorithms.Abstractions;
+using AlgoLib.Algorithms.Implementations;
+using TelemetryHealthPredictor.Algorithm;
 using TelemetryHealthPredictor.Algorithm.Delegates.Abstractions;
 using TelemetryHealthPredictor.Algorithm.Delegates.Implementations;
-using TelemetryHealthPredictor.Algorithm.Delegates.Mockups;
+using TelemetryHealthPredictor.Algorithm.Handlers;
 using TelemetryHealthPredictor.Config;
 using TelemetryHealthPredictor.Config.Builders;
 using TelemetryHealthPredictor.Config.Settings;
 using TelemetryHealthPredictor.Kafka;
-using TelemetryHealthPredictor.Model.AlgorithmDataObjects;
-using TelemetryHealthPredictor.Services.Algorithms.Mockups;
+using ThpUtils.Naming;
 
 namespace TelemetryHealthPredictor.Setup.BuilderExtensions
 {
@@ -20,26 +21,22 @@ namespace TelemetryHealthPredictor.Setup.BuilderExtensions
             builder.Services.Configure<KafkaConsumerConfig>
                 (builder.Configuration.GetSection(nameof(KafkaConsumerConfig)));
 
-            builder.Services.Configure<NamingSettings>
-                (builder.Configuration.GetSection(nameof(NamingSettings)));
-            builder.Services.AddSingleton(NamingDataBuilder.Build);
+            builder.Services.AddNaming(builder.Configuration);
 
-            builder.Services.Configure<KalmanSettings>
-                (builder.Configuration.GetSection(nameof(KalmanSettings)));
-            builder.Services.AddSingleton(KalmanBuilder.Build);
-
-            builder.Services.Configure<MahalanobisSettings>
-                (builder.Configuration.GetSection(nameof(MahalanobisSettings)));
-            builder.Services.AddSingleton(MahalanobisBuilder.Build);
-
-            builder.Services.Configure<CusumSettings>
-                (builder.Configuration.GetSection(nameof(CusumSettings)));
-            builder.Services.AddSingleton(CusumBuilder.Build);
+            builder.Services.Configure<BaselineSettings>
+                (builder.Configuration.GetSection(nameof(BaselineSettings)));
+            builder.Services.AddSingleton(BaselineBuilder.Build);
 
             builder.Services.AddSingleton<IKalmanFilter, KalmanFilter>();
             builder.Services.AddSingleton<IMahalanobis, Mahalanobis>();
             builder.Services.AddSingleton<ICusum, Cusum>();
             builder.Services.AddSingleton<IFusion, Fusion>();
+
+            builder.Services.AddSingleton<KalmanHandler>();
+            builder.Services.AddSingleton<MahalanobisHandler>();
+            builder.Services.AddSingleton<CusumHandler>();
+            builder.Services.AddSingleton<FusionHandler>();
+
             builder.Services.AddSingleton<IResultSender, ResultSender>();
 
             builder.Services.AddSingleton<IPipeline, Pipeline>();
