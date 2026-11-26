@@ -4,7 +4,6 @@ using Microsoft.Extensions.Options;
 using ParameterDataLib;
 using TelemetryHealthPredictor.Config;
 using TelemetryHealthPredictor.Algorithm;
-using TelemetryHealthPredictor.Data;
 
 namespace TelemetryHealthPredictor.Kafka
 {
@@ -50,14 +49,9 @@ namespace TelemetryHealthPredictor.Kafka
                         {
                             string json = result.Message.Value;
 
-                            ParameterData[] incomingParameterData = JsonSerializer.Deserialize<ParameterData[]>(json)!;
+                            ParameterData[] incomingParameters = JsonSerializer.Deserialize<ParameterData[]>(json)!;
 
-                            IncomingFlightParameter[] incomingParameters = Array.ConvertAll(incomingParameterData, data =>
-                            {
-                                return new IncomingFlightParameter(data);
-                            });
-
-                            _pipeline.BeginAlgorithm(incomingParameters);
+                            await _pipeline.BeginAlgorithm(incomingParameters);
                         }
                     }
                     catch (ConsumeException ex)
@@ -66,7 +60,7 @@ namespace TelemetryHealthPredictor.Kafka
                         Console.WriteLine();
                         Console.WriteLine(ex.StackTrace);
 
-                        await Task.Delay(2000);
+                        await Task.Delay(2000, token);
                     }
                 }
             }

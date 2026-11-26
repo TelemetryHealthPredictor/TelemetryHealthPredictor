@@ -1,4 +1,4 @@
-﻿using TelemetryHealthPredictor.Data;
+﻿using AlgoLib.Data.Result_Objects;
 
 namespace TelemetryHealthPredictor.Algorithm.Delegates.Abstractions
 {

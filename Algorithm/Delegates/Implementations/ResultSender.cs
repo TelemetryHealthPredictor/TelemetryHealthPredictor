@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using TelemetryHealthPredictor.Algorithm.Delegates.Abstractions;
-using TelemetryHealthPredictor.Data;
+using AlgoLib.Data.Result_Objects;
 using TelemetryHealthPredictor.Setup.Connection;
 
 namespace TelemetryHealthPredictor.Algorithm.Delegates.Implementations

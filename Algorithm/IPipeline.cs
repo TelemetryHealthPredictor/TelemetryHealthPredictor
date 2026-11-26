@@ -1,4 +1,4 @@
-﻿using TelemetryHealthPredictor.Data;
+﻿using ParameterDataLib;
 
 namespace TelemetryHealthPredictor.Algorithm
 {
@@ -6,7 +6,11 @@ namespace TelemetryHealthPredictor.Algorithm
     {
         public Task Completion();
 
-        public void BeginAlgorithm(IncomingFlightParameter[] parameter);
+        /// <summary>
+        /// Sends one frame into the pipeline. If the frame starts a new flight, first waits for
+        /// the previous flight's frames to finish, then resets the algorithms and rebuilds the blocks.
+        /// </summary>
+        public Task BeginAlgorithm(ParameterData[] parameters);
 
         public void Complete();
 
